@@ -5,6 +5,8 @@ setup(
     packages=find_packages(include=['prettier_prints']),
     version='0.1.0',
     description='colored outputs library for easier readability and styling',
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
     author='Dylan Stocking',
     license='MIT',
     install_requires=[],
