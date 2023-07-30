@@ -13,5 +13,5 @@ setup(
     setup_requires=['pytest-runner'],
     tests_require=['pytest==7.4.0'],
     test_suite='tests',
-    project_url='https://github.com/PhantomLeak/prettier_prints'
+    project_url='https://github.com/PhantomLeak/prettier_prints',
 )
