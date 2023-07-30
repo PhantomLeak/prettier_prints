@@ -1,34 +1,18 @@
-# pyproject.toml
-
-[build-system]
-requires      = ["setuptools>=61.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [project]
 name = "prettier_prints"
-version = "1.0.0"
-description = "Read the latest Real Python tutorials"
+version = "1.1"
+authors = [
+  { name="Dylan Stocking", email="dstocking0823@gmail.com" },
+]
+description = "colored outputs library for easier readability and styling"
 readme = "README.md"
-authors = [{ name = "Dylan Stocking"}]
-license = { file = "LICENSE" }
+requires-python = ">=3.7"
 classifiers = [
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python",
     "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
 ]
-keywords = ["prettier", "prints", "output"]
-dependencies = [
-    "feedparser >= 5.2.0",
-    "html2text",
-    'tomli; python_version < "3.11"',
-]
-requires-python = ">=3.9"
-
-[project.optional-dependencies]
-dev = ["black", "bumpver", "isort", "pip-tools", "pytest"]
 
 [project.urls]
-Homepage = "https://github.com/PhantomLeak/prettier_prints"
-
-[project.scripts]
-prettier_prints = "tests.test_prettier_prints:test_print"
+"Homepage" = "https://github.com/PhantomLeak/prettier_prints"
+"Bug Tracker" = "https://github.com/PhantomLeak/prettier_prints/issues"
