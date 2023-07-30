@@ -13,7 +13,7 @@ project_urls = {
 setup(
     name='prettier_prints',
     packages=find_packages(include=['prettier_prints.prettier_prints.PrettierPrints']),
-    version='1.1.0',
+    version='1.2.0',
     description='Lightweight library for prettier terminal outputs',
     long_description=long_description,
     long_description_content_type='text/markdown',
