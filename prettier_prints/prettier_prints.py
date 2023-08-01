@@ -1,8 +1,8 @@
 # ANSI coloring for terminal output messages
 class PrettierPrints:
     pref = "\033["
-    bold_pref = "\033[1m"
     reset = f"{pref}0m"
+    # Colors
     black = "30m"
     red = "31m"
     green = "32m"
@@ -11,15 +11,25 @@ class PrettierPrints:
     magenta = "35m"
     cyan = "36m"
     white = "37m"
+    # Bright Colors
+    bright_red = "31;1m"
+    bright_green = "32;1m"
+    bright_yellow = "33;1m"
+    bright_blue = "34;1m"
+    bright_magenta = "35;1m"
+    bright_cyan = "36;1m"
+    bright_white = "37;1m"
+    # Styling
+    bold = "\033[1m"
+    underline = "\033[4m"
+    reversed = "\033[7m"
 
     def __init__(self):
         pass
 
     # Custom message with color options rather than a set color output
-    def print(self, color: str = green, message: str = '', bold_text: bool = False):
+    def print(self, color: str = green, message: str = ''):
         prefex_string = ''
-        if bold_text:
-            prefex_string += f'{self.bold_pref}'
         prefex_string += f'{self.pref}{color}'
 
         print(f'{prefex_string}{message}{self.reset} ')
