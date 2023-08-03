@@ -4,10 +4,5 @@ prettier_prints = PrettierPrints()
 
 
 def test_print():
-    assert prettier_prints.print(color='red', message='This is a test', bold_text=True)
-
-
-def test_output_msg():
-    assert prettier_prints.output_message(color_one='green', msg='This is a test',
-                                          output='Success')
+    assert print(f'This is a test -> {prettier_prints.out(print_msg={"msg": " and it works", "style": "blue;bold;underline"})}')
 
