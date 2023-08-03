@@ -36,4 +36,4 @@ Example:
     print(pp.out({'msg': "What about a blue background?", 'style': 'blue;highlight'}))
     print(f'This also works for output messages -> {pp.out(print_msg={"msg": "See :)", "style": "magenta;bold;underline"})}')
 ```
-<img src="assets/print_output.png" height="100" alt="outputImage">
+<img src="https://github.com/PhantomLeak/prettier_prints/blob/main/Screenshot%20from%202023-08-02%2023-48-41.png" height="100" alt="outputImage">
