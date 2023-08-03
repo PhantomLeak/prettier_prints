@@ -32,7 +32,6 @@ class PrettierPrints:
     def out(self, print_msg: dict = {}):
         msg = print_msg.get('msg')
         style = print_msg.get('style')
-        color = STYLING_OPTIONS['white']
         if not msg:
             raise Exception('Msg is a required key')
 
@@ -48,7 +47,7 @@ class PrettierPrints:
         specified_styles = styling.split(';')
         for styles in specified_styles:
             style = STYLING_OPTIONS.get(styles)
-            if style:
+            if style:  # TODO: Check if not style and do a possible predefine if it was a color attempt
                 formatted_string += style
         return formatted_string
 

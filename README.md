@@ -1,30 +1,34 @@
 # Prettier_prints
 
-Lightweight library for prettier terminal outputs similar to chalk for Java. Helping make Python
-outputs easier to read and styled to your desires.
+Lightweight library for prettier terminal outputs similar to [chalk](https://github.com/chalk/chalk) for JavaScript. 
+Helping make Python outputs easier to read and styled to your desires.
+
+### Install
+```python
+pip install prettier-prints
+```
 
 ### Current functions:
  - out()
 
 ### Current available styling:
- - Bold
- - Underline
- - highlight
- - black
- - red
- - green
- - yellow
- - blue
- - magenta
- - cyan
- - white
- - bright_red
- - bright_green
- - bright_yellow
- - bright_blue
- - bright_magenta
- - bright_cyan
- - bright_white
+| Modifiers | Colors / Background Colors |    
+|:----------|:--------------------------:|
+| Bold      |            Red             |
+| Underline |           Green            | 
+| Highlight |           Yellow           |
+|           |            Blue            |
+|           |          Magenta           |
+|           |            Cyan            |
+|           |           White            |
+|           |         Bright Red         |
+|           |        Bright Green        |
+|           |       Bright Yellow        |
+|           |        Bright Blue         |
+|           |       Bright Magenta       |
+|           |        Bright Cyan         |
+|           |        Bright White        |
+
 
 Example:
 ```python
@@ -36,4 +40,4 @@ Example:
     print(pp.out({'msg': "What about a blue background?", 'style': 'blue;highlight'}))
     print(f'This also works for output messages -> {pp.out(print_msg={"msg": "See :)", "style": "magenta;bold;underline"})}')
 ```
-<img src="https://github.com/PhantomLeak/prettier_prints/blob/main/Screenshot%20from%202023-08-02%2023-48-41.png" height="100" alt="outputImage">
+![output image](https://github.com/PhantomLeak/prettier_prints/blob/main/Screenshot%20from%202023-08-02%2023-48-41.png?raw=true)
