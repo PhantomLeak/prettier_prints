@@ -4,5 +4,8 @@ prettier_prints = PrettierPrints()
 
 
 def test_print():
-    assert print(f'This is a test -> {prettier_prints.out(print_msg={"msg": " and it works", "style": "blue;bold;underline"})}')
+    prettier_prints.style = 'yellow;bold;underline'
+    assert print(f'This is a test -> {prettier_prints.out(msg="This is an assert test")}')
+    assert print(f'This is a test -> {prettier_prints.out(msg="This is an assert test", style="red;bold")}')
+    assert print(f'This is a test -> {prettier_prints.out(json_out={"msg": "test test", "style": "blue"})}')
 

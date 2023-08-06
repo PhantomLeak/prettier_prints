@@ -16,8 +16,8 @@ Example:
 
     print(pp.out(msg="Lets test the output"))
     print(pp.out(msg="Lets override the styling here", style="blue;bold"))
-    print(pp.out(print_msg={'msg': 'For those who prefer a JSON object param, this works too'}))
-    print(pp.out(print_msg={'msg': 'Can also overwrite this way', 'style': 'yellow;highlight'}))
+    print(pp.out(json_out={'msg': 'For those who prefer a JSON object param, this works too'}))
+    print(pp.out(json_out={'msg': 'Can also overwrite this way', 'style': 'yellow;highlight'}))
     print(f'Works great for output messages as well -> {pp.out(msg="See :)", style="magenta")}')
 ```
 ![output image](https://github.com/PhantomLeak/prettier_prints/blob/main/print_output.png?raw=true)
