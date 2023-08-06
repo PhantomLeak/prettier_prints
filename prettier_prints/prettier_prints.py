@@ -25,20 +25,26 @@ STYLING_OPTIONS = {
     "highlight": "\033[7m",
 }
 class PrettierPrints:
-    def __init__(self):
-        pass
+    def __init__(self, style: str = None):
+        self.style = style
 
     # Custom message with color options rather than a set color output
-    def out(self, print_msg: dict = {}):
-        msg = print_msg.get('msg')
-        style = print_msg.get('style')
+    def out(self, msg: str = None, style: str = None, print_msg: dict = {}):
+        if msg is None and print_msg != {}:
+            msg = print_msg.get('msg')
+
         if not msg:
             raise Exception('Msg is a required key')
 
         formatted_msg = f"{STYLING_OPTIONS['pref']}"
 
-        if style:
+        if style is None and print_msg != {}:
+            style = print_msg.get('style')
+
+        if style is not None:
             formatted_msg = self.get_styling_info(styling=style, formatted_string=formatted_msg)
+        elif self.style is not None:
+            formatted_msg = self.get_styling_info(styling=self.style, formatted_string=formatted_msg)
 
         formatted_msg += f"{msg}{STYLING_OPTIONS['reset']}"
         return formatted_msg
@@ -46,7 +52,7 @@ class PrettierPrints:
     def get_styling_info(self, styling, formatted_string):
         specified_styles = styling.split(';')
         for styles in specified_styles:
-            style = STYLING_OPTIONS.get(styles)
+            style = STYLING_OPTIONS.get(styles.lower())
             if style:  # TODO: Check if not style and do a possible predefine if it was a color attempt
                 formatted_string += style
         return formatted_string
@@ -54,4 +60,5 @@ class PrettierPrints:
 
 if __name__ == '__main__':
     pp = PrettierPrints()
-    print(f'This is a test -> {pp.out(print_msg={"msg": " and it works", "style": "blue;bold;underline"})}')
+    pp.style = 'Blue;bold;underline'
+    print(f'This is a test -> {pp.out(msg="And it works")}')

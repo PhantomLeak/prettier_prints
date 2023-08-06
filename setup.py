@@ -14,7 +14,7 @@ setup(
     name='prettier_prints',
     packages=find_packages(include=['prettier_prints.prettier_prints.PrettierPrints']),
     version='1.3.2',
-    description='Lightweight library for prettier terminal outputs and debugging similar to chalk for Java',
+    description='Lightweight library for prettier terminal outputs and debugging similar to chalk for Javascript',
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Dylan Stocking',
