@@ -1,33 +1,8 @@
 # ANSI coloring for terminal output messages
-STYLING_OPTIONS = {
-    "pref": "\033[",
-    "reset": "\033[0m",
-    # Colors
-    "standard_colors": {
-        "black": "30m",
-        "red": "31m",
-        "green": "32m",
-        "yellow": "33m",
-        "blue": "34m",
-        "magenta": "35m",
-        "cyan": "36m",
-        "white": "37m"
-    },
-    # Bright Colors
-    "bright_colors": {
-        "bright_red": "31;1m",
-        "bright_green": "32;1m",
-        "bright_yellow": "33;1m",
-        "bright_blue": "34;1m",
-        "bright_magenta": "35;1m",
-        "bright_cyan": "36;1m",
-        "bright_white": "37;1m",
-    },
-    # Styling
-    "bold": "\033[1m",
-    "underline": "\033[4m",
-    "highlight": "\033[7m",
-}
+from ansi_styling import STYLING_OPTIONS
+import json
+
+
 class PrettierPrints:
     def __init__(self, style: str = None):
         self.style = style
@@ -47,11 +22,27 @@ class PrettierPrints:
 
         if style is not None:
             formatted_msg = self.get_styling_info(styling=style, formatted_string=formatted_msg)
+
         elif self.style is not None:
             formatted_msg = self.get_styling_info(styling=self.style, formatted_string=formatted_msg)
 
         formatted_msg += f"{msg}{STYLING_OPTIONS['reset']}"
         return formatted_msg
+
+    def json(self, json_obj):
+        if json_obj == {} or json_obj is None:
+            raise Exception("Must be a valid JSON object")
+        print('{')
+        for key in json_obj.keys():
+            if type(json_obj[key]) == dict:
+                print(f"{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['blue']} {key} {STYLING_OPTIONS['reset']}: {str('{')}")
+                for inner_key in json_obj[key].keys():
+                    print(f"{' ' * 2}{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['red']} {inner_key} {STYLING_OPTIONS['reset']}: {json_obj[key][inner_key]}")
+                print(' }')
+            else:
+                print(f"{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['blue']} {key} {STYLING_OPTIONS['reset']}: {json_obj[key]}")
+
+        print('}')
 
     def get_styling_info(self, styling, formatted_string):
         color = STYLING_OPTIONS["standard_colors"]["white"]
@@ -74,5 +65,9 @@ class PrettierPrints:
 
 if __name__ == '__main__':
     pp = PrettierPrints()
-    pp.style = 'bold;yellow;underline'
-    print(f'This is a test -> {pp.out(msg="And it works")}')
+    pp.style = 'bright_red;bold;underline'
+    pp.json(json_obj={'test': 'cool', 'test_two': 'cool_two', 'dict_check': {'test': 'hello'}, 'list_check': []})
+    # print(f'This is a test -> {pp.out(msg="And it works")}')
+    # print(f'This is a test -> {pp.out(msg="And it works", style="bright_blue;underline")}')
+    # print(f'This is a test -> {pp.out(msg="And it works", style="blue;underline")}')
+    # print('\033[48;5;36m\033[38;5;41m TEXTHERE \033[0;0m')
