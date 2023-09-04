@@ -24,6 +24,7 @@ Example:
 
 ### Current functions:
  - out()
+ - json()
 
 ### Current available styling:
 | Modifiers | Colors / Background Colors |    
