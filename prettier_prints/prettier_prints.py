@@ -39,6 +39,17 @@ class PrettierPrints:
                 for inner_key in json_obj[key].keys():
                     print(f"{' ' * 2}{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['red']} {inner_key} {STYLING_OPTIONS['reset']}: {json_obj[key][inner_key]}")
                 print(' }')
+            elif type(json_obj[key]) == list:
+                print(f"{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['blue']} {key} {STYLING_OPTIONS['reset']}: {str('[')}")
+                for item in json_obj[key]:
+                    if type(item) == dict:
+                        print(' ' * 3 + '{')
+                        for inner_key in item.keys():
+                            print(f"{' ' * 4}{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['red']} {inner_key} {STYLING_OPTIONS['reset']}: {item[inner_key]}")
+                        print(' ' * 3 + '}')
+                    else:
+                        print(f"{' ' * 2}{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['red']} {item} {STYLING_OPTIONS['reset']}")
+                print(' ]')
             else:
                 print(f"{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['blue']} {key} {STYLING_OPTIONS['reset']}: {json_obj[key]}")
 
@@ -66,7 +77,19 @@ class PrettierPrints:
 if __name__ == '__main__':
     pp = PrettierPrints()
     pp.style = 'bright_red;bold;underline'
-    pp.json(json_obj={'test': 'cool', 'test_two': 'cool_two', 'dict_check': {'test': 'hello'}, 'list_check': []})
+    pp.json(json_obj={'test': 'cool', 'test_two': 'cool_two', 'dict_check': {'test': 'hello'},
+                      'list_check': [
+                          'test',
+                          'test two',
+                          {
+                              'test': 'hello',
+                              'test_two': 'bloop'
+                          },
+                          {
+                              'test': 'hello',
+                              'test_two': 'bloop'
+                          }
+                      ]})
     # print(f'This is a test -> {pp.out(msg="And it works")}')
     # print(f'This is a test -> {pp.out(msg="And it works", style="bright_blue;underline")}')
     # print(f'This is a test -> {pp.out(msg="And it works", style="blue;underline")}')
