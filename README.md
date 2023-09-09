@@ -26,6 +26,23 @@ Example:
  - out()
  - json()
 
+### Function parameters:
+     - out()
+       - msg: str           Output / display message[required]
+       - style: str         Styling to apply to the message[optional]
+       - json_out: dict     JSON object containing the message and styling[optional]
+
+     - json()
+       - style: str         Styling to apply to the message[optional]
+       - json_obj: dict     JSON object containing the message and styling[required]
+ 
+### Styling Examples By Function:
+    - out()
+        - style: 'red;underline'
+        - json_out: {'msg': 'Lets test the output', 'style': 'blue;bold'}
+    - json()
+        - style: 'list=red;underline&dict=blue;bold&str=yellow;highlight'
+
 ### Current available styling:
 | Modifiers | Colors / Background Colors |    
 |:----------|:--------------------------:|

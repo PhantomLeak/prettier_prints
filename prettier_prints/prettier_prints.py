@@ -1,6 +1,6 @@
 # ANSI coloring for terminal output messages
 from ansi_styling import STYLING_OPTIONS
-import json
+import re
 
 
 class PrettierPrints:
@@ -29,9 +29,13 @@ class PrettierPrints:
         formatted_msg += f"{msg}{STYLING_OPTIONS['reset']}"
         return formatted_msg
 
-    def json(self, json_obj):
+    def json(self, json_obj, style: str = None):
         if json_obj == {} or json_obj is None:
             raise Exception("Must be a valid JSON object")
+
+        if style is not None:
+            pass
+
         print('{')
         for key in json_obj.keys():
             if type(json_obj[key]) == dict:
@@ -75,22 +79,23 @@ class PrettierPrints:
 
 
 if __name__ == '__main__':
-    pp = PrettierPrints()
-    pp.style = 'bright_red;bold;underline'
-    pp.json(json_obj={'test': 'cool', 'test_two': 'cool_two', 'dict_check': {'test': 'hello'},
-                      'list_check': [
-                          'test',
-                          'test two',
-                          {
-                              'test': 'hello',
-                              'test_two': 'bloop'
-                          },
-                          {
-                              'test': 'hello',
-                              'test_two': 'bloop'
-                          }
-                      ]})
+    # pp = PrettierPrints()
+    # pp.style = 'bright_red;bold;underline'
+    # pp.json(json_obj={'test': 'cool', 'test_two': 'cool_two', 'dict_check': {'test': 'hello'},
+    #                   'list_check': [
+    #                       'test',
+    #                       'test two',
+    #                       {
+    #                           'test': 'hello',
+    #                           'test_two': 'bloop'
+    #                       },
+    #                       {
+    #                           'test': 'hello',
+    #                           'test_two': 'bloop'
+    #                       }
+    #                   ]}, style='list=blue;bold;underline&dict=red;bold;underline&list=green;bold;underline&list=yellow;bold;underline')
     # print(f'This is a test -> {pp.out(msg="And it works")}')
     # print(f'This is a test -> {pp.out(msg="And it works", style="bright_blue;underline")}')
     # print(f'This is a test -> {pp.out(msg="And it works", style="blue;underline")}')
     # print('\033[48;5;36m\033[38;5;41m TEXTHERE \033[0;0m')
+    print(re.search('string=(.*?)&', 'list=blue;bold;underline&dict=red;bold;underline&string=yellow;bold;underline&').group(1))
