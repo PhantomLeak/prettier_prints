@@ -1,6 +1,5 @@
 from setuptools import setup, find_packages
 
-# read the contents of your README file
 from pathlib import Path
 
 this_directory = Path(__file__).parent
@@ -19,14 +18,19 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     author='Dylan Stocking',
+    author_email='phantomleak@protonmail.com',
     license='MIT',
-    install_requires=[],
     setup_requires=['pytest-runner'],
     tests_require=['pytest==7.4.0'],
     test_suite='tests',
     classifiers=["License :: OSI Approved :: MIT License",
                  "Programming Language :: Python",
-                 "Programming Language :: Python :: 3"],
+                 "Programming Language :: Python :: 3",
+                 "Topic :: Software Development",
+                 "Operating System :: Microsoft :: Windows",
+                 "Operating System :: Unix",
+                 "Operating System :: MacOS",
+                 ],
     keywords=["prints", "chalk", "output"],
-    project_urls=project_urls
+    project_urls=project_urls,
 )

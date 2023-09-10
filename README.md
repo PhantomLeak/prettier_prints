@@ -41,7 +41,7 @@ Example:
         - style: 'red;underline'
         - json_out: {'msg': 'Lets test the output', 'style': 'blue;bold'}
     - json()
-        - style: 'list=red;underline&dict=blue;bold&str=yellow;highlight'
+        - style: 'list=red;underline&dict=blue;bold&str=yellow;highlight' # <- Break up the styling by type (list, dict, str)
 
 ### Current available styling:
 | Modifiers | Colors / Background Colors |    
@@ -60,4 +60,7 @@ Example:
 |           |       Bright Magenta       |
 |           |        Bright Cyan         |
 |           |        Bright White        |
+
+### Contributors / Thanks:
+ - [SheepDogg586](https://github.com/SheepDogg586)
 
