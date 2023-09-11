@@ -33,31 +33,65 @@ class PrettierPrints:
         if json_obj == {} or json_obj is None:
             raise Exception("Must be a valid JSON object")
 
-        if style is not None:
-            pass
+        json_style = self.strip_styling_for_json(style)
 
         print('{')
         for key in json_obj.keys():
+            formatted_string = f'{STYLING_OPTIONS["pref"]}'
             if type(json_obj[key]) == dict:
-                print(f"{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['blue']} {key} {STYLING_OPTIONS['reset']}: {str('{')}")
+                formatted_string = self.get_styling_info(styling=json_style['dict'], formatted_string=formatted_string)
+                print(f"{formatted_string}{key}{STYLING_OPTIONS['reset']}: {str('{')}")
                 for inner_key in json_obj[key].keys():
-                    print(f"{' ' * 2}{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['red']} {inner_key} {STYLING_OPTIONS['reset']}: {json_obj[key][inner_key]}")
-                print(' }')
+                    print(f"{' ' * 2}{formatted_string}{inner_key} {STYLING_OPTIONS['reset']}: {json_obj[key][inner_key]},")
+                print(' },')
+
             elif type(json_obj[key]) == list:
-                print(f"{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['blue']} {key} {STYLING_OPTIONS['reset']}: {str('[')}")
+                formatted_string = self.get_styling_info(styling=json_style['list'], formatted_string=formatted_string)
+                print(f"{formatted_string}{key}{STYLING_OPTIONS['reset']}: {str('[')}")
                 for item in json_obj[key]:
+                    formatted_string = self.get_styling_info(styling=json_style['list'], formatted_string=formatted_string)
                     if type(item) == dict:
+                        formatted_string = self.get_styling_info(styling=json_style['dict'], formatted_string=formatted_string)
                         print(' ' * 3 + '{')
                         for inner_key in item.keys():
-                            print(f"{' ' * 4}{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['red']} {inner_key} {STYLING_OPTIONS['reset']}: {item[inner_key]}")
-                        print(' ' * 3 + '}')
+                            print(f"{' ' * 4}{formatted_string}{inner_key} {STYLING_OPTIONS['reset']}: {item[inner_key]},")
+                        print(' ' * 3 + '},')
                     else:
-                        print(f"{' ' * 2}{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['red']} {item} {STYLING_OPTIONS['reset']}")
-                print(' ]')
+                        print(f"{' ' * 2}{formatted_string}{item}{STYLING_OPTIONS['reset']}")
+                print(' ],')
+
             else:
-                print(f"{STYLING_OPTIONS['pref']}{STYLING_OPTIONS['standard_colors']['blue']} {key} {STYLING_OPTIONS['reset']}: {json_obj[key]}")
+                formatted_string = self.get_styling_info(styling=json_style['string'], formatted_string=formatted_string)
+                print(f"{formatted_string}{key}{STYLING_OPTIONS['reset']}: {json_obj[key]},")
 
         print('}')
+
+    def strip_styling_for_json(self, styling):
+        return_styling = {
+            'list': 'red',
+            'dict': 'magenta',
+            'string': 'green'
+        }
+        if styling is not None:
+            if re.search('string=(.*?)', styling):
+                if re.search('string=(.*?)&', styling):
+                    return_styling['string'] = re.search('string=(.*?)&', styling).group(1)
+                elif re.search('&string=(.*?)', styling):
+                    return_styling['string'] = re.search('&string=(.*?)$', styling).group(1)
+
+            if re.search('list=(.*?)', styling):
+                if re.search('list=(.*?)&', styling):
+                    return_styling['list'] = re.search('list=(.*?)&', styling).group(1)
+                elif re.search('&list=(.*?)', styling):
+                    return_styling['list'] = re.search('&list=(.*?)$', styling).group(1)
+
+            if re.search('dict=(.*?)', styling):
+                if re.search('dict=(.*?)&', styling):
+                    return_styling['dict'] = re.search('dict=(.*?)&', styling).group(1)
+                elif re.search('&dict=(.*?)', styling):
+                    return_styling['dict'] = re.search('&dict=(.*?)$', styling).group(1)
+
+        return return_styling
 
     def get_styling_info(self, styling, formatted_string):
         color = STYLING_OPTIONS["standard_colors"]["white"]
@@ -74,28 +108,24 @@ class PrettierPrints:
                     formatted_style += STYLING_OPTIONS.get(styles)
 
         formatted_string += f'{color}{formatted_style}'
-
         return formatted_string
 
 
 if __name__ == '__main__':
-    # pp = PrettierPrints()
-    # pp.style = 'bright_red;bold;underline'
-    # pp.json(json_obj={'test': 'cool', 'test_two': 'cool_two', 'dict_check': {'test': 'hello'},
-    #                   'list_check': [
-    #                       'test',
-    #                       'test two',
-    #                       {
-    #                           'test': 'hello',
-    #                           'test_two': 'bloop'
-    #                       },
-    #                       {
-    #                           'test': 'hello',
-    #                           'test_two': 'bloop'
-    #                       }
-    #                   ]}, style='list=blue;bold;underline&dict=red;bold;underline&list=green;bold;underline&list=yellow;bold;underline')
-    # print(f'This is a test -> {pp.out(msg="And it works")}')
-    # print(f'This is a test -> {pp.out(msg="And it works", style="bright_blue;underline")}')
-    # print(f'This is a test -> {pp.out(msg="And it works", style="blue;underline")}')
-    # print('\033[48;5;36m\033[38;5;41m TEXTHERE \033[0;0m')
-    print(re.search('string=(.*?)&', 'list=blue;bold;underline&dict=red;bold;underline&string=yellow;bold;underline&').group(1))
+    pp = PrettierPrints()
+    pp.style = 'bright_red;bold;underline'
+    pp.json(json_obj={'test': 'cool', 'test_two': 'cool_two', 'dict_check': {'test': 'hello'},
+                      'list_check': [
+                          'test',
+                          'test two',
+                          {
+                              'test': 'hello',
+                              'test_two': 'bloop'
+                          },
+                          {
+                              'test': 'hello',
+                              'test_two': 'bloop'
+                          }
+                      ]}, style='list=blue;bold;underline&dict=red;bold;underline&string=green;')
+
+    # print(pp.strip_styling_for_json('string=red;underline&list=blue&dict=green;underline'))
