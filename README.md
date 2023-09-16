@@ -8,7 +8,8 @@ Helping make Python outputs easier to read and styled to your desires.
 pip install prettier-prints
 ```
 
-Example:
+Examples:
+out() 
 ```python
     from prettier_prints.prettier_prints import PrettierPrints
     pp = PrettierPrints()
@@ -22,8 +23,47 @@ Example:
 ```
 ![output image](https://github.com/PhantomLeak/prettier_prints/blob/main/print_output.png?raw=true)
 
+json()
+```python
+    from prettier_prints.prettier_prints import PrettierPrints
+    pp = PrettierPrints()
+    json_obj = {'test': 'cool', 'test_two': 'cool_two', 'dict_check': {'test': 'hello'},
+                'list_check': [
+                    'test',
+                    'test two',
+                    {
+                        'test': 'hello',
+                        'test_two': 'bloop'
+                    },
+                    {
+                        'test': 'hello',
+                        'test_two': 'bloop'
+                    }
+                ]}
+    print(prettier_prints.json(json_obj=json_obj, style='list=blue;underline&dict=red;bold&string=green;'))
+```
+![output image](https://github.com/PhantomLeak/prettier_prints/blob/main/json_output.png?raw=true)
+
 ### Current functions:
  - out()
+ - json()
+
+### Function parameters:
+     - out()
+       - msg: str           Output / display message[required]
+       - style: str         Styling to apply to the message[optional]
+       - json_out: dict     JSON object containing the message and styling[optional]
+
+     - json()
+       - style: str         Styling to apply to the message[optional]
+       - json_obj: dict     JSON object containing the message and styling[required]
+ 
+### Styling Examples By Function:
+    - out()
+        - style: 'red;underline'
+        - json_out: {'msg': 'Lets test the output', 'style': 'blue;bold'}
+    - json()
+        - style: 'list=red;underline&dict=blue;bold&str=yellow;highlight' # <- Break up the styling by type (list, dict, str)
 
 ### Current available styling:
 | Modifiers | Colors / Background Colors |    
@@ -42,4 +82,7 @@ Example:
 |           |       Bright Magenta       |
 |           |        Bright Cyan         |
 |           |        Bright White        |
+
+### Contributors / Thanks:
+ - [SheepDogg586](https://github.com/SheepDogg586)
 
