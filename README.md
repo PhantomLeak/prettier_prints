@@ -8,7 +8,8 @@ Helping make Python outputs easier to read and styled to your desires.
 pip install prettier-prints
 ```
 
-Example:
+Examples:
+out() 
 ```python
     from prettier_prints.prettier_prints import PrettierPrints
     pp = PrettierPrints()
@@ -21,6 +22,27 @@ Example:
     print(f'Works great for output messages as well -> {pp.out(msg="See :)", style="magenta")}')
 ```
 ![output image](https://github.com/PhantomLeak/prettier_prints/blob/main/print_output.png?raw=true)
+
+json()
+```python
+    from prettier_prints.prettier_prints import PrettierPrints
+    pp = PrettierPrints()
+    json_obj = {'test': 'cool', 'test_two': 'cool_two', 'dict_check': {'test': 'hello'},
+                'list_check': [
+                    'test',
+                    'test two',
+                    {
+                        'test': 'hello',
+                        'test_two': 'bloop'
+                    },
+                    {
+                        'test': 'hello',
+                        'test_two': 'bloop'
+                    }
+                ]}
+    print(prettier_prints.json(json_obj=json_obj, style='list=blue;underline&dict=red;bold&string=green;'))
+```
+![output image](https://github.com/PhantomLeak/prettier_prints/blob/main/json_output.png?raw=true)
 
 ### Current functions:
  - out()

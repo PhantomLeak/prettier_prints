@@ -39,30 +39,30 @@ class PrettierPrints:
         for key in json_obj.keys():
             formatted_string = f'{STYLING_OPTIONS["pref"]}'
             if type(json_obj[key]) == dict:
-                formatted_string = self.get_styling_info(styling=json_style['dict'], formatted_string=formatted_string)
-                print(f"{formatted_string}{key}{STYLING_OPTIONS['reset']}: {str('{')}")
+                dict_formatted_string = self.get_styling_info(styling=json_style['dict'], formatted_string=formatted_string)
+                print(f"{dict_formatted_string}{key}{STYLING_OPTIONS['reset']}: {str('{')}")
                 for inner_key in json_obj[key].keys():
-                    print(f"{' ' * 2}{formatted_string}{inner_key} {STYLING_OPTIONS['reset']}: {json_obj[key][inner_key]},")
+                    print(f"{' ' * 2}{dict_formatted_string}{inner_key} {STYLING_OPTIONS['reset']}: {json_obj[key][inner_key]},")
                 print(' },')
 
             elif type(json_obj[key]) == list:
-                formatted_string = self.get_styling_info(styling=json_style['list'], formatted_string=formatted_string)
-                print(f"{formatted_string}{key}{STYLING_OPTIONS['reset']}: {str('[')}")
+                list_formatted_string = self.get_styling_info(styling=json_style['list'], formatted_string=formatted_string)
+                print(f"{list_formatted_string}{key}{STYLING_OPTIONS['reset']}: {str('[')}")
                 for item in json_obj[key]:
-                    formatted_string = self.get_styling_info(styling=json_style['list'], formatted_string=formatted_string)
                     if type(item) == dict:
-                        formatted_string = self.get_styling_info(styling=json_style['dict'], formatted_string=formatted_string)
+                        dict_formatted_string = self.get_styling_info(styling=json_style['dict'], formatted_string=formatted_string)
                         print(' ' * 3 + '{')
                         for inner_key in item.keys():
-                            print(f"{' ' * 4}{formatted_string}{inner_key} {STYLING_OPTIONS['reset']}: {item[inner_key]},")
+                            print(f"{' ' * 4}{dict_formatted_string}{inner_key} {STYLING_OPTIONS['reset']}: {item[inner_key]},")
                         print(' ' * 3 + '},')
                     else:
-                        print(f"{' ' * 2}{formatted_string}{item}{STYLING_OPTIONS['reset']}")
+                        string_formatted_string = self.get_styling_info(styling=json_style['string'], formatted_string=formatted_string)
+                        print(f"{' ' * 2}{string_formatted_string}{item}{STYLING_OPTIONS['reset']}")
                 print(' ],')
 
             else:
-                formatted_string = self.get_styling_info(styling=json_style['string'], formatted_string=formatted_string)
-                print(f"{formatted_string}{key}{STYLING_OPTIONS['reset']}: {json_obj[key]},")
+                string_formatted_string = self.get_styling_info(styling=json_style['string'], formatted_string=formatted_string)
+                print(f"{string_formatted_string}{key}{STYLING_OPTIONS['reset']}: {json_obj[key]},")
 
         print('}')
 
@@ -113,7 +113,6 @@ class PrettierPrints:
 
 if __name__ == '__main__':
     pp = PrettierPrints()
-    pp.style = 'bright_red;bold;underline'
     pp.json(json_obj={'test': 'cool', 'test_two': 'cool_two', 'dict_check': {'test': 'hello'},
                       'list_check': [
                           'test',
@@ -126,6 +125,6 @@ if __name__ == '__main__':
                               'test': 'hello',
                               'test_two': 'bloop'
                           }
-                      ]}, style='list=blue;bold;underline&dict=red;bold;underline&string=green;')
+                      ]}, style='list=blue;underline&dict=red;bold&string=green;')
 
     # print(pp.strip_styling_for_json('string=red;underline&list=blue&dict=green;underline'))
