@@ -1,5 +1,5 @@
 # ANSI coloring for terminal output messages
-from ansi_styling import STYLING_OPTIONS
+from prettier_prints.ansi_styling import STYLING_OPTIONS
 import re
 
 
