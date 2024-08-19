@@ -14,12 +14,19 @@ out()
     from prettier_prints.prettier_prints import PrettierPrints
     pp = PrettierPrints()
     pp.style = 'red;underline'  # <-- Can optionally predefine styling and can be overwritten
-
+    
+    # Old style (v1)
     print(pp.out(msg="Lets test the output"))
     print(pp.out(msg="Lets override the styling here", style="blue;bold"))
     print(pp.out(json_out={'msg': 'For those who prefer a JSON object param, this works too'}))
     print(pp.out(json_out={'msg': 'Can also overwrite this way', 'style': 'yellow;highlight'}))
     print(f'Works great for output messages as well -> {pp.out(msg="See :)", style="magenta")}')
+
+    # New v2 style
+    from prettier_prints.prettier_printsv2 import Output
+    pp = Output()
+    print(f"\n{pp.msg('Hello').red().bold().underline()}")
+    print(f"{pp.msg('Hello').green().bold().out()}")
 ```
 ![output image](https://github.com/PhantomLeak/prettier_prints/blob/main/print_output.png?raw=true)
 
@@ -58,7 +65,7 @@ json()
        - style: str         Styling to apply to the message[optional]
        - json_obj: dict     JSON object containing the message and styling[required]
  
-### Styling Examples By Function:
+### Styling Examples By Function (v1 style):
     - out()
         - style: 'red;underline'
         - json_out: {'msg': 'Lets test the output', 'style': 'blue;bold'}
