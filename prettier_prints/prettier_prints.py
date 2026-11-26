@@ -1,6 +1,5 @@
 # ANSI coloring for terminal output messages
 from prettier_prints.ansi_styling import STYLING_OPTIONS
-import re
 
 
 class PrettierPrints:
@@ -72,24 +71,20 @@ class PrettierPrints:
             'dict': 'magenta',
             'string': 'green'
         }
-        if styling is not None:
-            if re.search('string=(.*?)', styling):
-                if re.search('string=(.*?)&', styling):
-                    return_styling['string'] = re.search('string=(.*?)&', styling).group(1)
-                elif re.search('&string=(.*?)', styling):
-                    return_styling['string'] = re.search('&string=(.*?)$', styling).group(1)
+        aliases = {'str': 'string'}  # README documents str=
 
-            if re.search('list=(.*?)', styling):
-                if re.search('list=(.*?)&', styling):
-                    return_styling['list'] = re.search('list=(.*?)&', styling).group(1)
-                elif re.search('&list=(.*?)', styling):
-                    return_styling['list'] = re.search('&list=(.*?)$', styling).group(1)
+        if not styling:
+            return return_styling
 
-            if re.search('dict=(.*?)', styling):
-                if re.search('dict=(.*?)&', styling):
-                    return_styling['dict'] = re.search('dict=(.*?)&', styling).group(1)
-                elif re.search('&dict=(.*?)', styling):
-                    return_styling['dict'] = re.search('&dict=(.*?)$', styling).group(1)
+        # "list=blue;bold&dict=red&string=green" -> one "type=styles" setting per '&'
+        for part in styling.split('&'):
+            if '=' not in part:
+                continue  # ignore malformed pieces
+            key, value = part.split('=', 1)
+            key = key.strip()
+            key = aliases.get(key, key)
+            if key in return_styling:
+                return_styling[key] = value.strip()
 
         return return_styling
 
@@ -101,6 +96,7 @@ class PrettierPrints:
         specified_styles = styling.split(';')
 
         for styles in specified_styles:
+            styles = styles.strip()
             if STYLING_OPTIONS["standard_colors"].get(styles):
                 color = f'{STYLING_OPTIONS["pref"]}{STYLING_OPTIONS["standard_colors"][styles]}'
             elif STYLING_OPTIONS["bright_colors"].get(styles):
