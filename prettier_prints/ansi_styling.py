@@ -1,5 +1,7 @@
 # ANSI coloring for terminal output messages
 # Old v1 version of the prettier prints module
+from typing import TypeVar
+
 STYLING_OPTIONS = {
     "pref": "\033[",
     "reset": "\033[0m",
@@ -39,79 +41,68 @@ def _reset() -> str:
     return STYLING_OPTIONS['reset']
 
 
-class Decorators:
+T = TypeVar('T', bound='_Styleable')
+
+
+class _Styleable:
     def __init__(self, message: str = ''):
         self.output_message = message
 
-    def bold(self) -> 'Decorators':
-        self.output_message = f"{STYLING_OPTIONS['bold']}{self.output_message}{_reset()}"
-        return self
-
-    def underline(self) -> 'Decorators':
-        self.output_message = f"{STYLING_OPTIONS['underline']}{self.output_message}{_reset()}"
-        return self
-
-    def highlight(self) -> 'Decorators':
-        self.output_message = f"{STYLING_OPTIONS['highlight']}{self.output_message}{_reset()}"
-        return self
+    def _wrap(self: T, open_code: str, close_code: str) -> T:
+        # Build a NEW instance of whatever class we are (e.g. Output); never mutate self
+        return type(self)(f"{open_code}{self.output_message}{close_code}")
 
 
-class Colors:
-    def __init__(self, message: str = ''):
-        self.output_message = message
-    
-    def red(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['standard_colors']['red']}{self.output_message}{_reset()}"
-        return self
+class Decorators(_Styleable):
+    def bold(self: T) -> T:
+        return self._wrap(STYLING_OPTIONS['bold'], _reset())
 
-    def green(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['standard_colors']['green']}{self.output_message}{_reset()}"
-        return self
+    def underline(self: T) -> T:
+        return self._wrap(STYLING_OPTIONS['underline'], _reset())
 
-    def yellow(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['standard_colors']['yellow']}{self.output_message}{_reset()}"
-        return self
+    def highlight(self: T) -> T:
+        return self._wrap(STYLING_OPTIONS['highlight'], _reset())
 
-    def blue(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['standard_colors']['blue']}{self.output_message}{_reset()}"
-        return self
-    
-    def magenta(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['standard_colors']['magenta']}{self.output_message}{_reset()}"
-        return self
 
-    def cyan(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['standard_colors']['cyan']}{self.output_message}{_reset()}"
-        return self
+class Colors(_Styleable):
+    def red(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['red']}", _reset())
 
-    def white(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['standard_colors']['white']}{self.output_message}{_reset()}"
-        return self
+    def green(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['green']}", _reset())
 
-    def bright_red(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_red']}{self.output_message}{_reset()}"
-        return self
+    def yellow(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['yellow']}", _reset())
 
-    def bright_green(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_green']}{self.output_message}{_reset()}"
-        return self
+    def blue(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['blue']}", _reset())
 
-    def bright_yellow(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_yellow']}{self.output_message}{_reset()}"
-        return self
+    def magenta(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['magenta']}", _reset())
 
-    def bright_blue(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_blue']}{self.output_message}{_reset()}"
-        return self
+    def cyan(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['cyan']}", _reset())
 
-    def bright_magenta(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_magenta']}{self.output_message}{_reset()}"
-        return self
+    def white(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['white']}", _reset())
 
-    def bright_cyan(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_cyan']}{self.output_message}{_reset()}"
-        return self
+    def bright_red(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_red']}", _reset())
 
-    def bright_white(self) -> 'Colors':
-        self.output_message = f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_white']}{self.output_message}{_reset()}"
-        return self
+    def bright_green(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_green']}", _reset())
+
+    def bright_yellow(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_yellow']}", _reset())
+
+    def bright_blue(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_blue']}", _reset())
+
+    def bright_magenta(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_magenta']}", _reset())
+
+    def bright_cyan(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_cyan']}", _reset())
+
+    def bright_white(self: T) -> T:
+        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_white']}", _reset())
