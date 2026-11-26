@@ -1,5 +1,6 @@
 import unittest
 from prettier_prints.prettier_printsv2 import Output
+from tests.helpers import VisualTestCase
 
 # v2 color method name -> ANSI code. Bright variant is code + 60 (90-97).
 STANDARD_COLORS = {
@@ -8,7 +9,7 @@ STANDARD_COLORS = {
 }
 
 
-class TestOutputImmutability(unittest.TestCase):
+class TestOutputImmutability(VisualTestCase):
     def setUp(self):
         self.pp = Output()
 
@@ -43,13 +44,13 @@ class TestOutputImmutability(unittest.TestCase):
         self.assertEqual(str(self.pp.msg('Hi').highlight()), "\033[7mHi\033[27m")
 
     def test_all_standard_and_bright_colors(self):
-        # Prints a side-by-side swatch; run `pytest -s` to see it in your terminal.
-        print("\n  standard           bright")
+        # Side-by-side swatch; run `pytest --output` to see it in your terminal.
+        self.show("\n  standard           bright")
         for name, code in STANDARD_COLORS.items():
             with self.subTest(color=name):
                 standard = getattr(self.pp.msg(name.ljust(16)), name)()
                 bright = getattr(self.pp.msg(f'bright_{name}'), f'bright_{name}')()
-                print(f"  {standard}   {bright}")
+                self.show(f"  {standard}   {bright}")
 
                 self.assertEqual(str(standard), f"\033[{code}m{name.ljust(16)}\033[39m")
                 self.assertEqual(str(bright), f"\033[{code + 60}mbright_{name}\033[39m")
@@ -59,14 +60,14 @@ class TestOutputImmutability(unittest.TestCase):
     def test_nested_different_styles(self):
         inner = self.pp.msg('file').bold()
         outer = self.pp.msg(f"Missing {inner} here").red()
-        print(f"\n  nested bold in red:  {outer}")
+        self.show(f"\n  nested bold in red:  {outer}")
         self.assertEqual(str(outer), "\033[31mMissing \033[1mfile\033[22m here\033[39m")
         self.assertNotIn("\033[0m", str(outer))
 
     def test_nested_same_style_type_restores_outer(self):
         inner = self.pp.msg('b').blue()
         outer = self.pp.msg(f"a {inner} c").red()
-        print(f"\n  nested blue in red:  {outer}")
+        self.show(f"\n  nested blue in red:  {outer}")
         # after blue closes, red is re-opened so " c" stays red
         self.assertEqual(str(outer), "\033[31ma \033[34mb\033[39m\033[31m c\033[39m")
 
