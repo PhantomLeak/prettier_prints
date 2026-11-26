@@ -117,6 +117,16 @@ Use these names in v1 style strings, or as v2 methods (e.g. `.bright_red()`, `.u
 
 `highlight` swaps the text and background colors. Background colors are not supported yet.
 
+## Running tests
+From the repository root:
+```bash
+pip install pytest
+python -m pytest            # results only
+python -m pytest --output   # also display color swatches, nested styles and JSON samples
+```
+Combine with pytest's own flags as usual, e.g. `python -m pytest -v --output`.
+The tests also run without pytest: `python -m unittest discover -s tests -t .` (visual output is not shown).
+
 ## What's new in 3.1.0
 - v2 `Output` calls return new values instead of modifying the original, so stored results
   no longer overwrite each other. Code that relied on in-place changes
