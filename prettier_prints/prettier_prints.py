@@ -15,19 +15,19 @@ class PrettierPrints:
         if not msg:
             raise Exception("A message is required")
 
-        formatted_msg = f"{STYLING_OPTIONS['pref']}"
-
         if style is None and json_out != {}:
             style = json_out.get('style')
 
-        if style is not None:
-            formatted_msg = self.get_styling_info(styling=style, formatted_string=formatted_msg)
+        if style is None:
+            style = self.style
 
-        elif self.style is not None:
-            formatted_msg = self.get_styling_info(styling=self.style, formatted_string=formatted_msg)
+        style_codes = self.get_styling_info(styling=style, formatted_string='') if style is not None else ''
 
-        formatted_msg += f"{msg}{STYLING_OPTIONS['reset']}"
-        return formatted_msg
+        # No recognised styling: return the plain message, never a dangling escape prefix
+        if not style_codes:
+            return f"{msg}"
+
+        return f"{style_codes}{msg}{STYLING_OPTIONS['reset']}"
 
     def json(self, json_obj, style: str = None):
         if json_obj == {} or json_obj is None:
@@ -37,7 +37,7 @@ class PrettierPrints:
 
         print('{')
         for key in json_obj.keys():
-            formatted_string = f'{STYLING_OPTIONS["pref"]}'
+            formatted_string = ''
             if type(json_obj[key]) == dict:
                 dict_formatted_string = self.get_styling_info(styling=json_style['dict'], formatted_string=formatted_string)
                 print(f"{dict_formatted_string}{key}{STYLING_OPTIONS['reset']}: {str('{')}")
@@ -93,19 +93,20 @@ class PrettierPrints:
 
         return return_styling
 
-    def get_styling_info(self, styling, formatted_string):
-        color = STYLING_OPTIONS["standard_colors"]["white"]
+    def get_styling_info(self, styling, formatted_string=''):
+        # Returns formatted_string + complete escape sequences for the requested styles.
+        # Color is only emitted if one was named (no forced white default).
+        color = ''
         formatted_style = ''
         specified_styles = styling.split(';')
 
         for styles in specified_styles:
             if STYLING_OPTIONS["standard_colors"].get(styles):
-                color = STYLING_OPTIONS["standard_colors"].get(styles)
+                color = f'{STYLING_OPTIONS["pref"]}{STYLING_OPTIONS["standard_colors"][styles]}'
             elif STYLING_OPTIONS["bright_colors"].get(styles):
-                color = STYLING_OPTIONS["bright_colors"].get(styles)
-            else:
-                if STYLING_OPTIONS.get(styles):
-                    formatted_style += STYLING_OPTIONS.get(styles)
+                color = f'{STYLING_OPTIONS["pref"]}{STYLING_OPTIONS["bright_colors"][styles]}'
+            elif styles in ('bold', 'underline', 'highlight'):
+                formatted_style += STYLING_OPTIONS[styles]
 
         formatted_string += f'{color}{formatted_style}'
         return formatted_string
