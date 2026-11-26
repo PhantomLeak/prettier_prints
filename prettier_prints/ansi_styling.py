@@ -16,20 +16,27 @@ STYLING_OPTIONS = {
         "cyan": "36m",
         "white": "37m"
     },
-    # Bright Colors
+    # Bright Colors (true bright codes 91-97, not bold + color)
     "bright_colors": {
-        "bright_red": "31;1m",
-        "bright_green": "32;1m",
-        "bright_yellow": "33;1m",
-        "bright_blue": "34;1m",
-        "bright_magenta": "35;1m",
-        "bright_cyan": "36;1m",
-        "bright_white": "37;1m",
+        "bright_red": "91m",
+        "bright_green": "92m",
+        "bright_yellow": "93m",
+        "bright_blue": "94m",
+        "bright_magenta": "95m",
+        "bright_cyan": "96m",
+        "bright_white": "97m",
     },
     # Styling
     "bold": "\033[1m",
     "underline": "\033[4m",
     "highlight": "\033[7m",
+    # Codes that turn off a single style without resetting everything else
+    "close": {
+        "color": "\033[39m",
+        "bold": "\033[22m",
+        "underline": "\033[24m",
+        "highlight": "\033[27m",
+    },
 }
 
 
@@ -49,60 +56,65 @@ class _Styleable:
         self.output_message = message
 
     def _wrap(self: T, open_code: str, close_code: str) -> T:
-        # Build a NEW instance of whatever class we are (e.g. Output); never mutate self
-        return type(self)(f"{open_code}{self.output_message}{close_code}")
+        # Re-apply our style wherever an inner style of the same type closed it,
+        # then build a NEW instance of whatever class we are (e.g. Output); never mutate self
+        inner = self.output_message.replace(close_code, close_code + open_code)
+        return type(self)(f"{open_code}{inner}{close_code}")
 
 
 class Decorators(_Styleable):
     def bold(self: T) -> T:
-        return self._wrap(STYLING_OPTIONS['bold'], _reset())
+        return self._wrap(STYLING_OPTIONS['bold'], STYLING_OPTIONS['close']['bold'])
 
     def underline(self: T) -> T:
-        return self._wrap(STYLING_OPTIONS['underline'], _reset())
+        return self._wrap(STYLING_OPTIONS['underline'], STYLING_OPTIONS['close']['underline'])
 
     def highlight(self: T) -> T:
-        return self._wrap(STYLING_OPTIONS['highlight'], _reset())
+        return self._wrap(STYLING_OPTIONS['highlight'], STYLING_OPTIONS['close']['highlight'])
 
 
 class Colors(_Styleable):
+    def _color(self: T, code: str) -> T:
+        return self._wrap(f"{_pref()}{code}", STYLING_OPTIONS['close']['color'])
+
     def red(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['red']}", _reset())
+        return self._color(STYLING_OPTIONS['standard_colors']['red'])
 
     def green(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['green']}", _reset())
+        return self._color(STYLING_OPTIONS['standard_colors']['green'])
 
     def yellow(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['yellow']}", _reset())
+        return self._color(STYLING_OPTIONS['standard_colors']['yellow'])
 
     def blue(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['blue']}", _reset())
+        return self._color(STYLING_OPTIONS['standard_colors']['blue'])
 
     def magenta(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['magenta']}", _reset())
+        return self._color(STYLING_OPTIONS['standard_colors']['magenta'])
 
     def cyan(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['cyan']}", _reset())
+        return self._color(STYLING_OPTIONS['standard_colors']['cyan'])
 
     def white(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['standard_colors']['white']}", _reset())
+        return self._color(STYLING_OPTIONS['standard_colors']['white'])
 
     def bright_red(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_red']}", _reset())
+        return self._color(STYLING_OPTIONS['bright_colors']['bright_red'])
 
     def bright_green(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_green']}", _reset())
+        return self._color(STYLING_OPTIONS['bright_colors']['bright_green'])
 
     def bright_yellow(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_yellow']}", _reset())
+        return self._color(STYLING_OPTIONS['bright_colors']['bright_yellow'])
 
     def bright_blue(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_blue']}", _reset())
+        return self._color(STYLING_OPTIONS['bright_colors']['bright_blue'])
 
     def bright_magenta(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_magenta']}", _reset())
+        return self._color(STYLING_OPTIONS['bright_colors']['bright_magenta'])
 
     def bright_cyan(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_cyan']}", _reset())
+        return self._color(STYLING_OPTIONS['bright_colors']['bright_cyan'])
 
     def bright_white(self: T) -> T:
-        return self._wrap(f"{_pref()}{STYLING_OPTIONS['bright_colors']['bright_white']}", _reset())
+        return self._color(STYLING_OPTIONS['bright_colors']['bright_white'])
