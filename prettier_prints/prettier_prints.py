@@ -1,20 +1,27 @@
 # ANSI coloring for terminal output messages
+import json as _json  # aliased: PrettierPrints has a method named json
+from typing import Optional
+
 from prettier_prints.ansi_styling import STYLING_OPTIONS
 
 
 class PrettierPrints:
-    def __init__(self, style: str = None):
+    def __init__(self, style: Optional[str] = None):
         self.style = style
 
     # Custom message with color options rather than a set color output
-    def out(self, msg: str = None, style: str = None, json_out: dict = {}):
-        if msg is None and json_out != {}:
+    def out(self, msg: Optional[str] = None, style: Optional[str] = None,
+            json_out: Optional[dict] = None):
+        json_out = json_out or {}  # None default: a {} default would be shared across calls
+
+        if msg is None:
             msg = json_out.get('msg')
 
-        if not msg:
-            raise Exception("A message is required")
+        # Only a missing message is an error; 0, False and '' are valid messages
+        if msg is None:
+            raise ValueError("A message is required")
 
-        if style is None and json_out != {}:
+        if style is None:
             style = json_out.get('style')
 
         if style is None:
@@ -28,42 +35,67 @@ class PrettierPrints:
 
         return f"{style_codes}{msg}{STYLING_OPTIONS['reset']}"
 
-    def json(self, json_obj, style: str = None):
-        if json_obj == {} or json_obj is None:
-            raise Exception("Must be a valid JSON object")
+    def json(self, json_obj, style: Optional[str] = None):
+        # Prints the styled JSON (unchanged public behavior); see json_str() for the string
+        print(self.json_str(json_obj, style))
 
-        json_style = self.strip_styling_for_json(style)
+    def json_str(self, json_obj, style: Optional[str] = None) -> str:
+        # Returns styled JSON of any depth. With ANSI codes stripped, the output is
+        # identical to json.dumps(json_obj, indent=2, ensure_ascii=False).
+        # Empty {} / [] are valid JSON; only a missing object is an error.
+        if json_obj is None:
+            raise ValueError("Must be a valid JSON object")
 
-        print('{')
-        for key in json_obj.keys():
-            formatted_string = ''
-            if type(json_obj[key]) == dict:
-                dict_formatted_string = self.get_styling_info(styling=json_style['dict'], formatted_string=formatted_string)
-                print(f"{dict_formatted_string}{key}{STYLING_OPTIONS['reset']}: {str('{')}")
-                for inner_key in json_obj[key].keys():
-                    print(f"{' ' * 2}{dict_formatted_string}{inner_key} {STYLING_OPTIONS['reset']}: {json_obj[key][inner_key]},")
-                print(' },')
+        codes = {kind: self.get_styling_info(styling=s)
+                 for kind, s in self.strip_styling_for_json(style).items()}
+        return self._format_json(json_obj, codes, level=0)
 
-            elif type(json_obj[key]) == list:
-                list_formatted_string = self.get_styling_info(styling=json_style['list'], formatted_string=formatted_string)
-                print(f"{list_formatted_string}{key}{STYLING_OPTIONS['reset']}: {str('[')}")
-                for item in json_obj[key]:
-                    if type(item) == dict:
-                        dict_formatted_string = self.get_styling_info(styling=json_style['dict'], formatted_string=formatted_string)
-                        print(' ' * 3 + '{')
-                        for inner_key in item.keys():
-                            print(f"{' ' * 4}{dict_formatted_string}{inner_key} {STYLING_OPTIONS['reset']}: {item[inner_key]},")
-                        print(' ' * 3 + '},')
-                    else:
-                        string_formatted_string = self.get_styling_info(styling=json_style['string'], formatted_string=formatted_string)
-                        print(f"{' ' * 2}{string_formatted_string}{item}{STYLING_OPTIONS['reset']}")
-                print(' ],')
+    def _format_json(self, value, codes, level) -> str:
+        pad, inner = '  ' * level, '  ' * (level + 1)
 
-            else:
-                string_formatted_string = self.get_styling_info(styling=json_style['string'], formatted_string=formatted_string)
-                print(f"{string_formatted_string}{key}{STYLING_OPTIONS['reset']}: {json_obj[key]},")
+        if isinstance(value, dict):
+            if not value:
+                return '{}'
+            lines = []
+            for key, val in value.items():
+                # A key is colored by the type of its value: dict, list, or anything else (string)
+                if isinstance(val, dict):
+                    kind = 'dict'
+                elif isinstance(val, (list, tuple)):
+                    kind = 'list'
+                else:
+                    kind = 'string'
+                key_text = self._paint(_json.dumps(self._json_key(key), ensure_ascii=False), codes[kind])
+                lines.append(f"{inner}{key_text}: {self._format_json(val, codes, level + 1)}")
+            return '{\n' + ',\n'.join(lines) + f'\n{pad}}}'
 
-        print('}')
+        if isinstance(value, (list, tuple)):
+            if not value:
+                return '[]'
+            items = []
+            for item in value:
+                text = self._format_json(item, codes, level + 1)
+                if not isinstance(item, (dict, list, tuple)):
+                    text = self._paint(text, codes['string'])
+                items.append(f"{inner}{text}")
+            return '[\n' + ',\n'.join(items) + f'\n{pad}]'
+
+        # Scalars (values stay uncolored): json handles quoting, escaping, true/false/null.
+        # Non-JSON types (datetime, set, ...) fall back to a quoted str() instead of crashing.
+        return _json.dumps(value, ensure_ascii=False, default=str)
+
+    @staticmethod
+    def _json_key(key) -> str:
+        # Match json.dumps key conversion: True -> "true", None -> "null", 1 -> "1"
+        if isinstance(key, str):
+            return key
+        if isinstance(key, (bool, int, float)) or key is None:
+            return _json.dumps(key)
+        return str(key)
+
+    @staticmethod
+    def _paint(text, code) -> str:
+        return f"{code}{text}{STYLING_OPTIONS['reset']}" if code else text
 
     def strip_styling_for_json(self, styling):
         return_styling = {
