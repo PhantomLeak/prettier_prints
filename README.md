@@ -1,12 +1,30 @@
 # Prettier_prints
 
-Lightweight library for prettier terminal outputs similar to [chalk](https://github.com/chalk/chalk) for JavaScript. 
-Helping make Python outputs easier to read and styled to your desires.
+[![PyPI version](https://img.shields.io/pypi/v/prettier-prints)](https://pypi.org/project/prettier-prints/)
+[![License: MIT](https://img.shields.io/pypi/l/prettier-prints)](https://github.com/PhantomLeak/prettier_prints/blob/main/LICENSE)
+[![Downloads](https://static.pepy.tech/badge/prettier-prints/month)](https://pepy.tech/project/prettier-prints)
 
-### Install
+**[Chalk](https://github.com/chalk/chalk)-style terminal colors for Python. Tiny, zero dependencies, chainable, nestable.**
+
+<!-- TODO: demo GIF goes here -->
+
+```python
+from prettier_prints.prettier_printsv2 import Output
+
+pp = Output()
+print(pp.msg("Error:").red().bold(), "file not found")
+print(pp.msg(f"Saved {pp.msg('config.yml').bold()}").green())
+```
+
 ```bash
 pip install prettier-prints
 ```
+
+### Why prettier_prints?
+- **Zero dependencies**: pure Python, nothing else to install.
+- **Chain and nest freely**: `.red().bold()` reads left to right, and inner styles never cancel outer ones.
+- **Drop it in anywhere**: styled values work directly in `print`, f-strings and `logging`.
+- **Pretty JSON too**: print dicts and lists as colored, valid JSON at any depth.
 
 ## Examples
 
