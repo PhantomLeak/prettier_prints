@@ -75,13 +75,15 @@ json()
 ### Current available styling:
 | Modifiers | Colors / Background Colors |    
 |:----------|:--------------------------:|
-| Bold      |            Red             |
-| Underline |           Green            | 
-| Highlight |           Yellow           |
+| Bold      |           Black            |
+| Underline |            Red             |
+| Highlight |           Green            |
+|           |           Yellow           |
 |           |            Blue            |
 |           |          Magenta           |
 |           |            Cyan            |
 |           |           White            |
+|           |    Bright Black (gray)     |
 |           |         Bright Red         |
 |           |        Bright Green        |
 |           |       Bright Yellow        |

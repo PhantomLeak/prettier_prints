@@ -1,10 +1,9 @@
 import unittest
 from prettier_prints.prettier_printsv2 import Output
 
-# v2 color method name -> ANSI code. Bright variant is code + 60 (91-97).
-# black is omitted until v2 gains black() (bug 4).
+# v2 color method name -> ANSI code. Bright variant is code + 60 (90-97).
 STANDARD_COLORS = {
-    'red': 31, 'green': 32, 'yellow': 33, 'blue': 34,
+    'black': 30, 'red': 31, 'green': 32, 'yellow': 33, 'blue': 34,
     'magenta': 35, 'cyan': 36, 'white': 37,
 }
 

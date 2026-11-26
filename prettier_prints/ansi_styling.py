@@ -18,6 +18,7 @@ STYLING_OPTIONS = {
     },
     # Bright Colors (true bright codes 91-97, not bold + color)
     "bright_colors": {
+        "bright_black": "90m",
         "bright_red": "91m",
         "bright_green": "92m",
         "bright_yellow": "93m",
@@ -77,6 +78,9 @@ class Colors(_Styleable):
     def _color(self: T, code: str) -> T:
         return self._wrap(f"{_pref()}{code}", STYLING_OPTIONS['close']['color'])
 
+    def black(self: T) -> T:
+        return self._color(STYLING_OPTIONS['standard_colors']['black'])
+
     def red(self: T) -> T:
         return self._color(STYLING_OPTIONS['standard_colors']['red'])
 
@@ -97,6 +101,9 @@ class Colors(_Styleable):
 
     def white(self: T) -> T:
         return self._color(STYLING_OPTIONS['standard_colors']['white'])
+
+    def bright_black(self: T) -> T:
+        return self._color(STYLING_OPTIONS['bright_colors']['bright_black'])
 
     def bright_red(self: T) -> T:
         return self._color(STYLING_OPTIONS['bright_colors']['bright_red'])
